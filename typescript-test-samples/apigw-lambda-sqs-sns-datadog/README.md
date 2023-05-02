@@ -1,8 +1,8 @@
-# Testing Serverless architectures with Datadog
+# Testing Serverless Architectures with Datadog
 
 This example is about creating Synthetic Tests and Monitors, to ensure Serverless services are functioning properly in a real, AWS environment.
 
-Datadog makes it easy to add logging, metrics, distributed tracing, profiling, and more to Serverless architectures built on AWS.
+Datadog makes it easy to add metrics, logs, distributed tracing, profiling, and more to Serverless architectures built on AWS.
 
 For this testing experience we'll use API Gateway, SNS, SQS, and Lambda:
 ![](./images/architecture.png)
@@ -25,15 +25,19 @@ curl -d '{"text": "Hello, world!"}' -H 'Content-Type: application/json' <your AP
 ```
 
 2. Within Datadog, open APM and select `Traces`. You should see something like this:
+
 ![](./images/flamegraph.png)
 
-Spend some time exploring this flamegraph. We can see a full end to end trace of our service, across API Gateway to Lamdba, through SNS and SQS, back into another Lambda function. Finally, we can also see the entire request and response payload:
+3. Spend some time exploring this flamegraph. We can see a full end to end trace of our service, across API Gateway to Lamdba, through SNS and SQS, back into another Lambda function. Finally, we can also see the entire request and response payload:
+
 ![](./images/capture_payload.png)
 
-We can see the impact of loading both the AWS SNS client from the AWS SDK, along with Axios.
+4. We can see the impact of loading both the AWS SNS client from the AWS SDK, along with Axios.
+
 ![](./images/cold_start_traces.png)
 
-Additionally, we can see requests we make to `datadoghq.com` from Axios in both the publisher and the worker, and we can see the time sepnt in SNS and SQS.
+5. Additionally, we can see requests we make to `datadoghq.com` from Axios in both the publisher and the worker, and we can see the time sepnt in SNS and SQS.
+
 ![](./images/sns_sqs.png)
 
 Great! Now it's time to automate this test.
@@ -48,20 +52,24 @@ Datadog tracks the performance of your webpages and APIs from the backend to the
 ![](./images/synthetics_test_menu_item.png)
 
 2. Select `New Test` in the upper right corner. Choose `API Test`
+
 ![](./images/new_synthetic_test.png)
 
 3. Let's give our test a name, `Test API Gateway -> Lambda -> SNS -> SQS -> Lambda service`
 4. Now we can add our URL, and a POST request Body.
+
 ![](./images/synthetic_test.png)
 
 5. Finally we can `test` our endpoint!
+
 ![](./images/successful_synthetic_test.png)
 
 6. Let's schedule this test to run once per day, from N. Virginia (us-east-1). We can assert on the response code, body, and more!
+
 ![](./images/synthetics_assertion.png)
 
 ## Monitoring
-In addition to active tracing and synthetics testing, we can create a monitor which can alert us if the service throws any errors.
+In addition to active tracing and Synthetic Testing, we can create a monitor which can alert us if the service throws any errors.
 
 1. Select `Monitors -> New Monitor` from the left nav.
 
@@ -70,6 +78,7 @@ In addition to active tracing and synthetics testing, we can create a monitor wh
 2. Choose `APM Monitor`
 3. Find our service:
 4. Create a new error monitor:
+
 ![](./images/monitor.png)
 
-5. We're done! Now we'll be alerted if there is a problem with our service!
+5. We're done! Now, we'll be alerted if there is a problem with our service!
